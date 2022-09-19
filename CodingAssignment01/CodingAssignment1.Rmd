@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r packages}
 # Put any packages you want here
-
+Vanessa - do we really need any packages? Shouldn't they already be in our programs? readexcel? 
 ```
 
 
@@ -38,7 +38,7 @@ Answer the following questions using complete sentences and attach all output, p
 
 ```{r dataset, include=FALSE}
 # Bring in the dataset here
-
+Vanessa - readexcel(location of data), describe the column types with col_types = c(descriptions)
 
 ```
 
@@ -49,6 +49,9 @@ Answer the following questions using complete sentences and attach all output, p
 Perform univariate analyses on the quantitative variables (center, shape, spread). Include descriptive statistics, and histograms. Be sure to use terms discussed in class such as bimodal, skewed left, etc.
 
 ```{r q1}
+Vanessa: name the file 
+summary(filename) -- this will give us basic statistics like mean median and Q1,Q3
+hist(filename) - will produce a histogram
 
 ```
 
@@ -57,7 +60,8 @@ Perform univariate analyses on the quantitative variables (center, shape, spread
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
 
 ```{r q2}
-
+vanessa: 
+plot(x - 1st variable,y-2nd variable), type=l for the line Main = "title" of graph xlab = "xaxis title" ylab = "yaxis title"  for a scatter plot
 ```
 
 # Question 3
@@ -67,7 +71,8 @@ Generate a regression equation in the following form:
 $$Charges = \beta_{0}+\beta_{1}*Age+\beta_{2}*BMI+\beta_{3}*Children$$
 
 ```{r q3}
-
+Vanessa: name the model then the formula is lm(dependent variable ~ independent variable, data = name)
+summary(model we named) will give us SEE if we want to find the correlation cor(filename$independant variable,filename$dependent variable)^2 
 ```
 
 also write out the regression cleanly in this document.
@@ -78,5 +83,5 @@ An eager insurance representative comes back with a potential client. The client
 
 
 ```{r q4}
-
-```
+vanessa:  set up the newprediction data.frame(variable =#,variable =#,variable =#) then we need to run the prediction predict(name of our model,newdata=newprediction) --this will plug in the values and spit out the answer FOR the confidence interval we want to use the same function as above and write interval an the decimal we want predict(name of our model,newdata=newprediction, interval = "confidence", level =.95)
+                                                ```
