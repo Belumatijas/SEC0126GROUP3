@@ -1,6 +1,6 @@
 ---
 title: "Coding Assignment 1"
-author: "Team N"
+author: "Team 3"
 date: "Due: 2021-09-29 23:59"
 output: 
   html_document:
@@ -25,7 +25,9 @@ library(corrplot) # for fancier correlations
 library(car) # for easier scatterplots
 library(jtools) # for fancier regression output
 library(psych)
-
+library(readr)
+library(plotly)
+ 
 ```
 
 
@@ -51,7 +53,6 @@ Answer the following questions using complete sentences and attach all output, p
 
 insurance <- read.csv("../Data/insurance_0126_Group3.csv") 
 
-
 str(insurance)
 
 ```
@@ -64,14 +65,14 @@ Perform univariate analyses on the quantitative variables (center, shape, spread
 
 ```{r q1}
 describe(insurance)
+summary(insurance)
 ```
 
 #Center
 
 
-
-#Mean
-```{r}
+##Mean
+```{r mean}
 
 mean(insurance$Charges)
 
@@ -84,8 +85,8 @@ mean(insurance$Children)
 
 ```
 
-#Median
-```{r}
+##Median
+```{r median}
 median(insurance$Charges)
 
 median(insurance$Age)
@@ -96,8 +97,8 @@ median(insurance$Children)
 ```
 
 
-#Mode
-```{r}
+##Mode
+```{r mode}
 getModes <- function(x) {
   ux <- unique(x)
   tab <- tabulate(match(x, ux))
@@ -107,28 +108,28 @@ getModes <- function(x) {
 getModes(insurance$Charges)
 
 getModes(insurance$Age)
-UniModal
+
 
 getModes(insurance$BMI)
-TriModal
+
 
 
 getModes(insurance$Children)
-UniModal
+
 
 
 ```
-
-
-
+Mode for Charges - No Mode 
+Mode for Age - Unimodal
+Mode for BMI - Trimodal 
+Mode for Children - Unimodal
 
 
 #Shape
 
 
-#Histograms
-```{r}
-`{r q1}
+##Histograms
+```{r histogram}
 
 
 hist(insurance$Charges, col = 5)
@@ -143,7 +144,7 @@ hist(insurance$Children, col = 2)
 
 
 #Spread
-```{r q1}
+```{r spread}
 describe(insurance)
 
 
@@ -173,61 +174,57 @@ range(insurance$Children, na.rm = TRUE)
 ```
 
 
-#Histogram Plots and skews
-```{r q1}
-
+##Histogram Plots and skews
+```{r plots}
 plot_ly(x = ~insurance$Charges, type = "histogram", alpha = 0.6) %>% 
   layout(title = 'Distribution of Insurance',
          xaxis = list(title = 'Charges'),
          yaxis = list(title = 'Count')) 
-                                                Data is Skewed left
+                                               
 
 
 plot_ly(x = ~insurance$Age, type = "histogram", alpha = 0.6) %>% 
   layout(title = 'Distribution of Insurance',
          xaxis = list(title = 'Age'),
          yaxis = list(title = 'Count'))
-                                                Data skewed to the left but only a little 
          
                                                                                      
 plot_ly(x = ~insurance$BMI, type = "histogram", alpha = 0.6) %>% 
   layout(title = 'Distribution of Insurance',
          xaxis = list(title = 'BMI'),
          yaxis = list(title = 'Count'))
-                                                Data is almost symmetrical
-
+                                                
 
                                                 
 plot_ly(x = ~insurance$Children, type = "histogram", alpha = 0.6) %>% 
   layout(title = 'Distribution of Insurance',
          xaxis = list(title = 'Children'),
          yaxis = list(title = 'Count'))
-                                                Data is Skewed left
+                                                
 
 
 ```
-
-
+Data for Charges is Skewed left
+Data for Age skewed to the left but only a little
+Data for BMI is almost symmetrical
+Data For Children is Skewed left
 
 # Question 2
 
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
 
 ```{r q2}
-
 cor(insurance)
+reduced <- insurance %>%
+  select(Charges, Age, BMI, Children)
 
-
-corrplot(cor(insurance),
+corrplot(cor(reduced),
 type = "lower",
 order = "hclust",
 tl.col = "black",
 tl.srt = 45,
 addCoef.col = "black",
 diag = FALSE)
-
-
-scatterplotMatrix(insurance)
 
 ```
 
@@ -250,6 +247,9 @@ summ(model)
 
 also write out the regression cleanly in this document.
 
+Regression Equation is: 
+Charges = -18209.91 +11.52(Age) + 1067.17(BMI) + 1290.77(Children)
+
 # Question 4
 
 An eager insurance representative comes back with a potential client. The client is 40, their BMI is 30, and they have one dependent. Using the regression equation above, predict the amount of medical expenses associated with this policy. (Provide a 95% confidence interval as well)
@@ -258,9 +258,9 @@ An eager insurance representative comes back with a potential client. The client
 ```{r q4}
 
 
-newPrediction <- data.frame(Age = 37,
-BMI = 17.290,
-Children = 2)
+newPrediction <- data.frame(Age = 40,
+BMI = 30,
+Children = 1)
 predict(model, newdata = newPrediction)
 
 
@@ -272,5 +272,7 @@ model$coefficients["BMI"]
 
 model$coefficients["Children"]
 
+
+predict(model, newdata = newPrediction, interval = "confidence", level = .95)
 
 ```
