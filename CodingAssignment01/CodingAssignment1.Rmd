@@ -68,10 +68,10 @@ describe(insurance)
 summary(insurance)
 ```
 
-#Center
+# Center
 
 
-##Mean
+## Mean
 ```{r mean}
 
 mean(insurance$Charges)
@@ -85,7 +85,7 @@ mean(insurance$Children)
 
 ```
 
-##Median
+## Median
 ```{r median}
 median(insurance$Charges)
 
@@ -97,7 +97,7 @@ median(insurance$Children)
 ```
 
 
-##Mode
+## Mode
 ```{r mode}
 getModes <- function(x) {
   ux <- unique(x)
@@ -109,10 +109,7 @@ getModes(insurance$Charges)
 
 getModes(insurance$Age)
 
-
 getModes(insurance$BMI)
-
-
 
 getModes(insurance$Children)
 
@@ -125,10 +122,10 @@ Mode for BMI - Trimodal
 Mode for Children - Unimodal
 
 
-#Shape
+# Shape
 
 
-##Histograms
+## Histograms
 ```{r histogram}
 
 
@@ -143,7 +140,7 @@ hist(insurance$Children, col = 2)
 
 
 
-#Spread
+# Spread
 ```{r spread}
 describe(insurance)
 
@@ -174,7 +171,7 @@ range(insurance$Children, na.rm = TRUE)
 ```
 
 
-##Histogram Plots and skews
+## Histogram Plots and Skews
 ```{r plots}
 plot_ly(x = ~insurance$Charges, type = "histogram", alpha = 0.6) %>% 
   layout(title = 'Distribution of Insurance',
@@ -209,10 +206,22 @@ Data for Age skewed to the left but only a little
 Data for BMI is almost symmetrical
 Data For Children is Skewed left
 
+### Box Plots 
+```{r box plot}
+boxplot(insurance$Charges)
+
+boxplot(insurance$Age)
+
+boxplot(insurance$BMI)
+
+boxplot(insurance$Children)
+```
+
+
 # Question 2
 
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
-
+# General Relationshsip
 ```{r q2}
 cor(insurance)
 reduced <- insurance %>%
@@ -226,6 +235,29 @@ tl.srt = 45,
 addCoef.col = "black",
 diag = FALSE)
 
+scatterplotMatrix(reduced)
+
+```
+
+## Specific Correlations 
+```{r corr1}
+cor(insurance$Charges,insurance$Age)
+
+cor(insurance$Charges,insurance$BMI)
+
+cor(insurance$Charges,insurance$Children)
+```
+Correlation between Charges and Age is weakly positive
+Correlation between Charges and BMI is moderately positive
+Correlation between Charges and Children is almost no linear relationship.  
+
+See the visuals of those statements below:
+
+### Visual of specific Correlations
+```{r vis corr}
+plot(insurance$Age,insurance$Charges)
+plot(insurance$BMI,insurance$Charges)
+plot(insurance$Children,insurance$Charges)
 ```
 
 # Question 3
