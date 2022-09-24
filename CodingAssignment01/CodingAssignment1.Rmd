@@ -206,7 +206,7 @@ Data for Age skewed to the left but only a little
 Data for BMI is almost symmetrical
 Data For Children is Skewed left
 
-### Box Plots 
+## Box Plots 
 ```{r box plot}
 boxplot(insurance$Charges)
 
@@ -221,7 +221,7 @@ boxplot(insurance$Children)
 # Question 2
 
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
-# General Relationshsip
+## General Relationshsip
 ```{r q2}
 cor(insurance)
 reduced <- insurance %>%
@@ -253,7 +253,7 @@ Correlation between Charges and Children is almost no linear relationship.
 
 See the visuals of those statements below:
 
-### Visual of specific Correlations
+## Visual of specific Correlations
 ```{r vis corr}
 plot(insurance$Age,insurance$Charges)
 plot(insurance$BMI,insurance$Charges)
