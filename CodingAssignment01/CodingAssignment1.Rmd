@@ -57,7 +57,7 @@ str(insurance)
 
 ```
 
-
+`Did not remove categorical data. Error follows through (-1)`
 
 # Question 1
 
@@ -217,6 +217,7 @@ boxplot(insurance$BMI)
 boxplot(insurance$Children)
 ```
 
+`Insufficient explanation of results (-4)`
 
 # Question 2
 
@@ -259,6 +260,8 @@ plot(insurance$Age,insurance$Charges)
 plot(insurance$BMI,insurance$Charges)
 plot(insurance$Children,insurance$Charges)
 ```
+
+`Missing rest of the relationships of independent variables (-3)`
 
 # Question 3
 
