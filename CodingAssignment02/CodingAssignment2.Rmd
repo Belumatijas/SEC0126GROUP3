@@ -49,10 +49,12 @@ summary(model)
 
 
 ```
+Regression Equation: Charges = -14182.13 + 134.61∗Age + 570.86∗BMI + 1258.53∗Children + 943.21∗Female + 24436.43∗Smoker - 2056.24∗WinterSprings -1976.87∗WinterPark + 49.91∗Oviedo
 
-Which independent variables test significant in a two-tailed test? Use $\alpha = 0.2$
 
- At a two-tail test @ alpha =.2, Age , BMI, Children, and Smoker are the independent variables that tested significant.
+Question: Which independent variables test significant in a two-tailed test? Use $\alpha = 0.2$
+
+Answer:  At a two-tail test @ alpha =.2, Age , BMI, Children, and Smoker are the independent variables that tested significant.
 
 Age P value = .0111 < alpha .2
 BMI P value = .0286 < alpha .2
@@ -64,15 +66,15 @@ Smoker P value = 5.56e-16 < alpha .2
 Interpret the coefficients of all the independent variables that tested significant.
 
 
-Since Age, BMI, Children, and Smoker are the only ones that tested significant at the 80% level, let's analyze the coefficients. 
+Since Age, BMI, Children, and Smoker are the only ones that tested significant at the 80% confidence level, let's analyze the coefficients. 
 
 If a person's Age increases by 1, Charges are approximately expected to increase by 135 dollars, give or take 77 dollars. 
 
 If a person's BMI increases by 1, Charges are approximately expected to increase by 571 dollars, give or take 205 dollars. 
 
-If  Children increases by 1, Charges are approximately expected to increase by 1259 dollars, give or take 990 dollars. 
+If number of Children increases by 1, Charges are approximately expected to increase by 1259 dollars, give or take 990 dollars. 
 
-If Smoker increases by 1, Charges are approximately expected to increase by 24436 dollars, give or take 2469 dollars. 
+If a person is a Smoker,their charges are approximately expected to increase by 24436 dollars, give or take 2469 dollars, compared to a nonsmoker.  
 
 
 ## Question 3
@@ -124,5 +126,7 @@ summary(model_insurance)
 
 anova(model_insurance, model)
 ```
-Removing the cities did not have a significant impact in the insurance charges as the F score of .6956 is not less than the alpha of .05.
-
+Using the Partial Ftest:
+Including the cities does not reduce the SSE by a statically significant amount. 
+The following independent variables Age, BMI, Children,and Smoker all tested significant at alpha = .05 in the reduce regression Model, as they did in the original model. The independent variable for gender did not test significant in both models. Therefore, removing the cities did not have any significant impact on Insurance Charges. 
+Also in Model 2 (including the cities) this model did not test significant at alpha =.05 (It's pvalue is not less than alpha)
