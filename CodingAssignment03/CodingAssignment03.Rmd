@@ -2,17 +2,29 @@
 title: "Coding Assignment 3"
 author: "Team 3"
 date: "Due: 2021-12-09 23:59"
-output: 
+output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
 library(readxl)
 library(plotly)
 library(car)
+library(dplyr)
+library(ggplot2)
+library(gt)
+library(gtsummary)
+library(jtools)
+library(psych)
+library(readr)
+library(broom)
+library(ggpubr)
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 A Florida health insurance company wants to predict annual claims for individual clients. The company pulls a random sample of 50 customers. The owner wishes to charge an actuarially fair premium to ensure a normal rate of return. The owner collects all of their current customer’s health care expenses from the last year and compares them with what is known about each customer’s plan. 
@@ -32,7 +44,9 @@ Answer the following questions using complete sentences and attach all output, p
 
 ```{r dataset, include=FALSE}
 insurance <- read.csv("~/GitHub/SEC0126GROUP3/Data/insurance_0126_Group3.csv")
-summary(insurance)
+
+gt(head(insurance)) # the gt function only makes it look nicer
+
 ```
 
 
@@ -44,7 +58,31 @@ Randomly select three observations from the sample and exclude from all modeling
 ```{r Q1}
 
 
+reduced_insurance <- insurance [-c(1,2,3),] # drops first 3 rows (observations)
+model_insurance <- lm(Charges ~. , data = reduced_insurance)
+summary(reduced_insurance)
+
+
+
+sd(insurance$Charges, na.rm = TRUE)
+
+sd(insurance$Age, na.rm = TRUE)
+
+sd(insurance$BMI, na.rm = TRUE)
+
+sd(insurance$Children, na.rm = TRUE)
+
+sd(insurance$Female, na.rm = TRUE)
+
+sd(insurance$Smoker, na.rm = TRUE)
+
+sd(insurance$WinterSprings, na.rm = TRUE)
+
+sd(insurance$WinterPark, na.rm = TRUE)
+
+sd(insurance$Oviedo, na.rm = TRUE)
 ```
+
 
 
 ## Question 2
@@ -52,6 +90,12 @@ Randomly select three observations from the sample and exclude from all modeling
 Provide the correlation between all quantitative variables
 
 ```{r Q2}
+quantitative_insurance <- insurance[,-(4:9)] # drops last 6 columns which are the non-quantitative variables
+model_insurance <- lm(Charges ~. , data = quantitative_insurance)
+cor(quantitative_insurance)
+
+
+
 
 ```
 
@@ -61,6 +105,22 @@ Provide the correlation between all quantitative variables
 Run a regression that includes all independent variables in the data table. Does the model above violate any of the Gauss-Markov assumptions? If so, what are they and what is the solution for correcting?
 ```{r Q3}
 
+newPrediction <- data.frame(Age = 37,
+BMI = 17, Female = 1, Smoker = 0,
+Children = 2, WinterSprings = 0, WinterPark=1, Oviedo =0)
+predict(model_insurance, newdata = newPrediction)
+
+
+
+
+model_insurance$coefficients["Age"]
+
+model_insurance$coefficients["BMI"]
+
+model_insurance$coefficients["Children"]
+
+
+predict(model_insurance, newdata = newPrediction, interval = "confidence", level = .95)
 ```
 
 ## Question 4
