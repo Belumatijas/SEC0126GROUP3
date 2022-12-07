@@ -120,7 +120,7 @@ summary(model_transformation3)
 Use the 3 withheld observations and calculate the performance measures for your best two models. Which is the better model? (remember that "better" depends on whether your outlook is short or long run)
 
 ```{r Q5}
-testing_set
+testing_set HELP! 
 ```
 
 
@@ -129,7 +129,7 @@ testing_set
 Provide interpretations of the coefficients, do the signs make sense? Perform marginal change analysis (thing 2) on the independent variables.
 
 ```{r Q6}
-
+HELP! 
 ```
 
 ## Question 7
