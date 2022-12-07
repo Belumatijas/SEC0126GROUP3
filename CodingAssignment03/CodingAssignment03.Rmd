@@ -54,11 +54,11 @@ testing_set <- insurance[index] #the tree rows we pulled put.
 
 summary(training_set[,c(1:3,5)]) # only looking at the quantivitative variables and the 47 observations. 
 
-sd(insurance$Charges, na.rm = TRUE)
+sd(training_set$Charges, na.rm = TRUE)
 
-sd(insurance$Age, na.rm = TRUE)
+sd(training_set$Age, na.rm = TRUE)
 
-sd(insurance$BMI, na.rm = TRUE)
+sd(training_set$BMI, na.rm = TRUE)
 
 ```
 
@@ -120,7 +120,7 @@ summary(model_transformation3)
 Use the 3 withheld observations and calculate the performance measures for your best two models. Which is the better model? (remember that "better" depends on whether your outlook is short or long run)
 
 ```{r Q5}
-
+testing_set
 ```
 
 
