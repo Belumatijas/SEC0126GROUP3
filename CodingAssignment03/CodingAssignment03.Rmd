@@ -146,6 +146,46 @@ An eager insurance representative comes back with five potential clients. Using 
 
 
 ```{r Q7}
+####### need to deicide westher the training model or the testing model is best. Then adjust the the formulas to reflect...I think ######
+traing_set<- data.frame(Age = 60,
+BMI = 22,
+Female = 1,
+Children = 0,
+Smoker = 0,
+City = Oviedo)
+predict(model, newdata = training_set,interval = "prediction")
+
+traing_set<- data.frame(Age = 40,
+BMI = 30,
+Female = 0,
+Children = 1,
+Smoker = 0,
+City = Sanford)
+predict(model, newdata = training_set,interval = "prediction")
+
+traing_set<- data.frame(Age = 25,
+BMI = 25,
+Female = 0,
+Children = 0,
+Smoker = 1,
+City = Winter Park)
+predict(model, newdata = training_set,interval = "prediction")
+
+traing_set<- data.frame(Age = 33,
+BMI = 35,
+Female = 1,
+Children = 2,
+Smoker = 0,
+City = Winter springs)
+predict(model, newdata = training_set,interval = "prediction")
+
+traing_set<- data.frame(Age = 45,
+BMI = 27,
+Female = 1,
+Children = 3,
+Smoker = 0,
+City = Oviedo)
+predict(model, newdata = training_set,interval = "prediction")
 
 ```
 
