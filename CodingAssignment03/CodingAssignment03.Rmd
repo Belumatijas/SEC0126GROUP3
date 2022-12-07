@@ -14,14 +14,8 @@ output:
 library(readxl)
 library(plotly)
 library(car)
-library(dplyr)
-library(gt)
-library(gtsummary)
-library(jtools)
-library(psych)
-library(readr)
-library(broom)
-library(ggpubr)
+library(corrplot)
+
 knitr::opts_chunk$set(echo = TRUE)
 
 ```
@@ -43,9 +37,7 @@ Answer the following questions using complete sentences and attach all output, p
 
 ```{r dataset, include=FALSE}
 insurance <- read.csv("~/GitHub/SEC0126GROUP3/Data/insurance_0126_Group3.csv")
-
-gt(head(insurance)) # the gt function only makes it look nicer
-
+summary(insurance)
 ```
 
 
@@ -55,12 +47,17 @@ gt(head(insurance)) # the gt function only makes it look nicer
 Randomly select three observations from the sample and exclude from all modeling (i.e. n=47). Provide the summary statistics (min, max, std, mean, median) of the quantitative variables for the 47 observations.
 
 ```{r Q1}
+set.seed(123456)
+index <- sample(seq_len(nrow(insurance)), size = 3) 
 
+training_set <- insurance[-index,] #everything but the three rows we dropped
 
-reduced_insurance <- insurance [-c(1,2,3),] # drops first 3 rows (observations)
-model_insurance <- lm(Charges ~. , data = reduced_insurance)
-summary(reduced_insurance)
+testing_set <- insurance[index] #the tree rows we pulled put. 
 
+summary(training_set[,c(1:3,5)]) # only looking at the quantivitative variables and the 47 observations. 
+
+model_1 <- lm(Charges ~. , data = trainging_set)
+summary(trainging_set)
 
 
 sd(insurance$Charges, na.rm = TRUE)
@@ -69,17 +66,6 @@ sd(insurance$Age, na.rm = TRUE)
 
 sd(insurance$BMI, na.rm = TRUE)
 
-sd(insurance$Children, na.rm = TRUE)
-
-sd(insurance$Female, na.rm = TRUE)
-
-sd(insurance$Smoker, na.rm = TRUE)
-
-sd(insurance$WinterSprings, na.rm = TRUE)
-
-sd(insurance$WinterPark, na.rm = TRUE)
-
-sd(insurance$Oviedo, na.rm = TRUE)
 ```
 
 
