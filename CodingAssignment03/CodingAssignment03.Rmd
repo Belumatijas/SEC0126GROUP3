@@ -40,8 +40,6 @@ insurance <- read.csv("~/GitHub/SEC0126GROUP3/Data/insurance_0126_Group3.csv")
 summary(insurance)
 ```
 
-
-
 ## Question 1
 
 Randomly select three observations from the sample and exclude from all modeling (i.e. n=47). Provide the summary statistics (min, max, std, mean, median) of the quantitative variables for the 47 observations.
@@ -86,15 +84,37 @@ par(mfrow=c(2,2))
 plot(model_1)
 
 ```
+[insert analysisparthere ]
 
 ## Question 4
 
 Implement the solutions from question 3, such as data transformation, along with any other changes you wish. Use the sample data and run a new regression. How have the fit measures changed? How have the signs and significance of the coefficients changed?
 
-```{r Q4}
-
+```{r Q4 1 transformation}
+[insert new columns for the adjustments we are wanting to make] 
+histogram of variable 
+histogram of transformed variable
+scatterplotmatrix(trainging_set[select the columns you want as dependent first , then all the others needed)])
+model_transformation1 <- lm()
+summary(model_transformation1)
 ```
 
+```{r Q4 2 transformation}
+[insert new columns for the adjustments we are wanting to make] 
+histogram of variable 
+histogram of transformed variable
+scatterplotmatrix(trainging_set[select the columns you want as dependent first , then all the others needed)])
+model_transformation2 <- lm()
+summary(model_transformation2)
+```
+```{r Q4 3 transformation}
+[insert new columns for the adjustments we are wanting to make] 
+histogram of variable 
+histogram of transformed variable
+scatterplotmatrix(trainging_set[select the columns you want as dependent first , then all the others needed)])
+model_transformation3 <- lm()
+summary(model_transformation3)
+```
 ## Question 5
 
 Use the 3 withheld observations and calculate the performance measures for your best two models. Which is the better model? (remember that "better" depends on whether your outlook is short or long run)
