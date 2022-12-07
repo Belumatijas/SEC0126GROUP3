@@ -71,9 +71,6 @@ sd(insurance$BMI, na.rm = TRUE)
 Provide the correlation between all quantitative variables
 
 ```{r Q2}
-
-model_1 <- lm(Charges ~. , data = trainging_set)
-summary(trainging_set)
 corrplot(cor(training_set[,c1:3,5)]), type= "lower order = "hclust", tl.col = "black", tl.srt = 45, addcoef.col ="black", diag= FALSE,)
 
 ```
@@ -83,23 +80,11 @@ corrplot(cor(training_set[,c1:3,5)]), type= "lower order = "hclust", tl.col = "b
 
 Run a regression that includes all independent variables in the data table. Does the model above violate any of the Gauss-Markov assumptions? If so, what are they and what is the solution for correcting?
 ```{r Q3}
+model_1 <- lm(Charges ~. , data = trainging_set)
+summary(model_1)
+par(mfrow=c(2,2))
+plot(model_1)
 
-newPrediction <- data.frame(Age = 37,
-BMI = 17, Female = 1, Smoker = 0,
-Children = 2, WinterSprings = 0, WinterPark=1, Oviedo =0)
-predict(model_insurance, newdata = newPrediction)
-
-
-
-
-model_insurance$coefficients["Age"]
-
-model_insurance$coefficients["BMI"]
-
-model_insurance$coefficients["Children"]
-
-
-predict(model_insurance, newdata = newPrediction, interval = "confidence", level = .95)
 ```
 
 ## Question 4
