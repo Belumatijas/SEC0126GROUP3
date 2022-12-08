@@ -147,6 +147,7 @@ An eager insurance representative comes back with five potential clients. Using 
 
 ```{r Q7}
 ####### need to deicide westher the training model or the testing model is best. Then adjust the the formulas to reflect...I think ######
+model_ <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = TRAINING_SET)
 traing_set<- data.frame(Age = 60,
 BMI = 22,
 Female = 1,
