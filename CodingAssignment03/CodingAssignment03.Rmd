@@ -11,10 +11,17 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+install.packages("ggplot2")
 library(readxl)
 library(plotly)
 library(car)
 library(corrplot)
+library(jtools)
+library(gt)
+library(gtsummary)
+library(ggplot2)
+
+
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -48,11 +55,11 @@ Randomly select three observations from the sample and exclude from all modeling
 set.seed(123456)
 index <- sample(seq_len(nrow(insurance)), size = 3) 
 
-training_set <- insurance[-index,] #everything but the three rows we dropped
+training_set <- insurance[-index,] #everything but the three rows we dropped / 47 observations
 
-testing_set <- insurance[index] #the tree rows we pulled put. 
+testing_set <- insurance[index,] #the three rows we pulled put. 
 
-summary(training_set[,c(1:3,5)]) # only looking at the quantivitative variables and the 47 observations. 
+summary(training_set[,c(1:3,5)]) # only looking at the quantitative variables and the 47 observations. 
 
 sd(training_set$Charges, na.rm = TRUE)
 
@@ -60,42 +67,61 @@ sd(training_set$Age, na.rm = TRUE)
 
 sd(training_set$BMI, na.rm = TRUE)
 
+sd(training_set$Children, na.rm = TRUE)
 ```
+Charges is skewed to the Right because the mean is greater than the median, which means there might be some outliers. 
 
+Age has a approximately normal distribution because the mean and median are similar. 
 
+BMI has a approximately normal distribution because the mean and median are similar.   
+
+**Children is skewed to the Right because the mean is greater than the median, which means there might be some outliers. 
 
 ## Question 2
 
 Provide the correlation between all quantitative variables
 
 ```{r Q2}
-corrplot(cor(training_set[,c1:3,5)]), type= "lower order = "hclust", tl.col = "black", tl.srt = 45, addcoef.col ="black", diag= FALSE,)
-
+cor(training_set[c(1:3,5)])
+corrplot((cor(training_set[,c(1:3,5)])))
 ```
-
+Based on the data above, all the values are below .5 therefore indicating that they are not highly correlated. No evidence of multicollinearity. 
 
 ## Question 3
 
 Run a regression that includes all independent variables in the data table. Does the model above violate any of the Gauss-Markov assumptions? If so, what are they and what is the solution for correcting?
 ```{r Q3}
-model_1 <- lm(Charges ~. , data = trainging_set)
+model_1 <- lm(Charges ~. , data = training_set)
 summary(model_1)
 par(mfrow=c(2,2))
 plot(model_1)
 
 ```
-[insert analysisparthere ]
+[insert analysis part here ]
+
+```{r q3.2}
+scatterplotMatrix(training_set[-c(4,6:9)])
+
+```
+From here you can see some non-linear relationships and non-normally distributed variables. Transformations are needed in order to account for the nonlinear relationships.
+
+
+Age and Charges appear to not have a linear relationship, we will transform this by a log function. Taking logs will bring outliers closer to the other charges
+BMI & Charges looks to have a heteroskadistiy relationship, we will fix with a log function. 
+Children& Charges appear to not have a linear relationship, we will transform this by a log function. Taking logs will bring outliers closer to the other charges
 
 ## Question 4
 
 Implement the solutions from question 3, such as data transformation, along with any other changes you wish. Use the sample data and run a new regression. How have the fit measures changed? How have the signs and significance of the coefficients changed?
 
 ```{r Q4 1 transformation}
-[insert new columns for the adjustments we are wanting to make] 
-histogram of variable 
-histogram of transformed variable
-scatterplotmatrix(trainging_set[select the columns you want as dependent first , then all the others needed)])
-model_transformation1 <- lm()
+training_set$LnAge <- log(training_set$Age)
+                                 
+hist(training_set$Age) #before
+hist(training_set$LnAge) #after
+scatterplotMatrix(training_set[c(1,2,10)])
+
+model_transformation1 <- lm(Charges ~., data = training_set[,c(10,1,4,6:9)])
 summary(model_transformation1)
 ```
 
@@ -147,46 +173,49 @@ An eager insurance representative comes back with five potential clients. Using 
 
 ```{r Q7}
 ####### need to deicide westher the training model or the testing model is best. Then adjust the the formulas to reflect...I think ######
-model_ <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = TRAINING_SET)
-traing_set<- data.frame(Age = 60,
+model_1 <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = training_set)
+
+Customer1 <- data.frame(Age = 60,
 BMI = 22,
 Female = 1,
 Children = 0,
 Smoker = 0,
 City = Oviedo)
-predict(model, newdata = training_set,interval = "prediction")
 
-traing_set<- data.frame(Age = 40,
+predict(model_1, newdata = training_set,interval = "prediction")
+
+Customer2 <- data.frame(Age = 40,
 BMI = 30,
 Female = 0,
 Children = 1,
 Smoker = 0,
 City = Sanford)
-predict(model, newdata = training_set,interval = "prediction")
 
-traing_set<- data.frame(Age = 25,
+predict(model_1, newdata = training_set,interval = "prediction")
+
+Customer3 <- data.frame(Age = 25,
 BMI = 25,
 Female = 0,
 Children = 0,
 Smoker = 1,
-City = Winter Park)
-predict(model, newdata = training_set,interval = "prediction")
+City = WinterPark)
+predict(model_1, newdata = training_set,interval = "prediction")
 
-traing_set<- data.frame(Age = 33,
+Customer4 <- data.frame(Age = 33,
 BMI = 35,
 Female = 1,
 Children = 2,
 Smoker = 0,
-City = Winter springs)
-predict(model, newdata = training_set,interval = "prediction")
+City = WinterSprings)
+predict(model_1, newdata = training_set,interval = "prediction")
 
-traing_set<- data.frame(Age = 45,
+Customer5 <- data.frame(Age = 45,
 BMI = 27,
 Female = 1,
 Children = 3,
 Smoker = 0,
 City = Oviedo)
-predict(model, newdata = training_set,interval = "prediction")
+predict(model_1, newdata = training_set,interval = "prediction")
 
 ```
 
