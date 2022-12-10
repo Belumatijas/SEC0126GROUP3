@@ -139,6 +139,8 @@ Children& Charges appear to not have a linear relationship, we will transform th
 Implement the solutions from question 3, such as data transformation, along with any other changes you wish. Use the sample data and run a new regression. How have the fit measures changed? How have the signs and significance of the coefficients changed?
 
 ```{r Q4 1 transformation}
+training_set$LnCharges <- log(training_set$Charges)
+
 training_set$LnAge <- log(training_set$Age)
                                  
 hist(training_set$Age) #before
@@ -146,7 +148,7 @@ hist(training_set$LnAge) #after
 scatterplotMatrix(training_set[c(1,2,10)])
 
 
-model_transformation1 <- lm(Charges ~., data = training_set[,c(10,1,4,6:9)])
+model_transformation1 <- lm(LnCharges ~., data = training_set[,c(10,11,4,6:9)])
 summary(model_transformation1)
 
 
@@ -180,7 +182,7 @@ hist(training_set$LnCharges) #after
 scatterplotMatrix(training_set[c(1,2,11)])
 
 
-model_transformation2 <- lm(Charges ~., data = training_set[,c(11,1,4,6:9)])
+model_transformation2 <- lm(LnCharges ~., data = training_set[,c(10,2,4,6:9)])
 summary(model_transformation2)
 # or
 
@@ -201,7 +203,7 @@ The data is more distributed and the Mean lies closer to the middle.
 
 
 ```{r Q4 3 }
-
+training_set$LnCharges <- log(training_set$Charges)
 training_set$BMIsqd <- training_set$BMI ^2
 
 
@@ -211,7 +213,7 @@ hist(training_set$BMI^2)#After
 scatterplotMatrix(training_set[c(1,3,12)])
 
 
-model_transformation3 <- lm(Charges ~., data = training_set[,c(12,1,3,4,6:9)])
+model_transformation3 <- lm(LnCharges ~., data = training_set[,c(10,12,2,4:9)])
 summary(model_transformation3)
 # or
 
@@ -265,67 +267,79 @@ Use the 3 withheld observations and calculate the performance measures for your 
 test$error <- test$Prediction - test$Charges
 
 ```{r Q5}
+```
+
+### Bias
+```{r Q5 1}
 
 # Model 1
 mean(testing_set$error_1)
-##
+##[1] -270.0057
 
 # Model 2
 mean(testing_set$error_2)
-## 
+## [1] -1171.28
 
+```
 
+### MAE
+```{r Q5 2}
 mae <- function(error_vector){
 error_vector %>%
 abs() %>%
 mean()
 }
 
-
-
 # Model 1
 mae(testing_set$error_1)
-## [1] 
+## [1] 338.4513
 
 # Model 2
 mae(testing_set$error_2)
-## [1] 
+## [1] 1171.28
 
  
+```
+
+### RMSE
+
+```{r Q5 3}
+
 rmse <- function(error_vector){
-error_vectorˆ2 %>%
-mean() %>%
-sqrt()}
+   error_vector^2 %>% 
+  mean() %>% 
+  sqrt()
 
-
+}
 
 # Model 1
 rmse(testing_set$error_1)
-
-##  
+##  [1] 416.7811
 
 # Model 2
 rmse(testing_set$error_2)
-## 
+## [1] 1358.178
 
- 
+```
+
+### MAPE
+
+```{r Q5 4}
 mape <- function(error_vector, actual_vector){
-(error_vector/actual_vector) %>%
-abs() %>%
-mean()
+  (error_vector/actual_vector) %>% 
+    abs() %>% 
+    mean()
 }
 
-
-
 # Model 1
-mape(test$error_1, test$saleprice)
-## 
+mape(testing_set$error_1, testing_set$Charges)
+## [1] 0.03529974
 
 # Model 2
-mape(testing_set$error_2, test$saleprice)
-## 
+mape(testing_set$error_2, testing_set$Charges)
+## [1] 0.07170367
 ```
-Looking at these three models, the initial model was the worst performing.. Looking at the other two, the logarithmic relationship has lower bias, MAE, and MAPE. Model 2 has a lower RMSE meaning that there were not large prediction errors. Picking which model would depend on your time preference. If you are looking at the short-run, then Model 2. Model 1 if you are looking at the long-run. Needs edits.
+Looking at these two models, the second model was the worst performing. Looking at the other one, the logarithmic relationship has higher bias, lower MAE, and lower MAPE. A MAPE less than 5%, which Model 1 has, means that a prediction is acceptably accurate. Model 1 has a lower RMSE meaning that there were not large prediction errors. If you were to pick between one model or the other, it would depend on your time preference. If you are looking to choose in the short-run, then Model 1. If the long-run, then Model 2. 
 
 
 ## Question 6
