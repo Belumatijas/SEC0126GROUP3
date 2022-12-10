@@ -100,6 +100,7 @@ cor(training_set[c(1:3,5)])
 corrplot((cor(training_set[,c(1:3,5)])))
 ```
 Based on the data above, all the values are below .5 therefore indicating that they are not highly correlated. No evidence of multicollinearity. 
+BMI and Charges have a .456 correlation coefficient which indicates a moderate level of correlation. We will conduct further investigation on this relationship below. 
 
 ## Question 3
 
@@ -124,7 +125,7 @@ The intercept along with the coefficients of WinterSprings, WinterPark, and Ovie
 The only significant variables are Age, BMI, and Smoker as their P-values are less than .05 in a 95% confidence interval.
 
 ```{r q3.2}
-scatterplotMatrix(training_set[-c(4,6:11)])
+scatterplotMatrix(training_set[-c(4,6:11)])  #scatter plot of just the quantitative variables 
 
 ```
 From here you can see some non-linear relationships and non-normally distributed variables. Transformations are needed in order to account for the nonlinear relationships.
@@ -145,10 +146,10 @@ training_set$LnAge <- log(training_set$Age)
                                  
 hist(training_set$Age) #before
 hist(training_set$LnAge) #after
-scatterplotMatrix(training_set[c(1,2,10)])
+scatterplotMatrix(training_set[c(2,11)]) #scatter plot of LnAge & Age 
 
 
-model_transformation1 <- lm(LnCharges ~., data = training_set[,c(10,11,4,6:9)])
+model_transformation1 <- lm(LnAge ~., data = training_set[,c(11,3:9)])
 summary(model_transformation1)
 
 
@@ -179,10 +180,10 @@ training_set$LnCharges <- log(training_set$Charges)
                                  
 hist(training_set$Charges) #before
 hist(training_set$LnCharges) #after
-scatterplotMatrix(training_set[c(1,2,11)])
+scatterplotMatrix(training_set[c(1,10)])
 
 
-model_transformation2 <- lm(LnCharges ~., data = training_set[,c(10,2,4,6:9)])
+model_transformation2 <- lm(LnCharges ~., data = training_set[,c(10,2:9)])
 summary(model_transformation2)
 # or
 
@@ -210,7 +211,7 @@ training_set$BMIsqd <- training_set$BMI ^2
 hist(training_set$BMI)#Before
 hist(training_set$BMI^2)#After
 
-scatterplotMatrix(training_set[c(1,3,12)])
+scatterplotMatrix(training_set[c(3,12)])
 
 
 model_transformation3 <- lm(LnCharges ~., data = training_set[,c(10,12,2,4:9)])
@@ -228,15 +229,19 @@ plot(model_transformation3)
 ```
 
 
+After the data transformation, the coefficients of WinterSprings, WinterPark, and Oviedo are negative. The only significant independent variables are BMIsqd, Age, and Smoker.
+
+The histogram also reflects a more distributed set of data and the Mean lies closer to the center.
 
 
+## Question 5
 
 
+Use the 3 withheld observations and calculate the performance measures for your best two models. Which is the better model? (remember that "better" depends on whether your outlook is short or long run)
 
-
-
-
-```{r}
+test$error <- test$Prediction - test$Charges
+### Errors
+```{r q5}
 
 
  
@@ -257,28 +262,16 @@ testing_set$error_2 <- testing_set$model_2_pred - testing_set$Charges
 
 
 ```
-
-
-## Question 5
-
-
-Use the 3 withheld observations and calculate the performance measures for your best two models. Which is the better model? (remember that "better" depends on whether your outlook is short or long run)
-
-test$error <- test$Prediction - test$Charges
-
-```{r Q5}
-```
-
 ### Bias
 ```{r Q5 1}
 
 # Model 1
 mean(testing_set$error_1)
-##[1] -270.0057
+##[1] -20696.6
 
 # Model 2
 mean(testing_set$error_2)
-## [1] -1171.28
+## [1] 1630.76
 
 ```
 
@@ -292,11 +285,11 @@ mean()
 
 # Model 1
 mae(testing_set$error_1)
-## [1] 338.4513
+## [1] 20696.6
 
 # Model 2
 mae(testing_set$error_2)
-## [1] 1171.28
+## [1] 2851.449
 
  
 ```
@@ -314,11 +307,11 @@ rmse <- function(error_vector){
 
 # Model 1
 rmse(testing_set$error_1)
-##  [1] 416.7811
+##  [1] 26012.14
 
 # Model 2
 rmse(testing_set$error_2)
-## [1] 1358.178
+## [1] 2997.694
 
 ```
 
@@ -333,13 +326,13 @@ mape <- function(error_vector, actual_vector){
 
 # Model 1
 mape(testing_set$error_1, testing_set$Charges)
-## [1] 0.03529974
+## [1] 0.9967447
 
 # Model 2
 mape(testing_set$error_2, testing_set$Charges)
-## [1] 0.07170367
+## [1] 0.1859913
 ```
-Looking at these two models, the second model was the worst performing. Looking at the other one, the logarithmic relationship has higher bias, lower MAE, and lower MAPE. A MAPE less than 5%, which Model 1 has, means that a prediction is acceptably accurate. Model 1 has a lower RMSE meaning that there were not large prediction errors. If you were to pick between one model or the other, it would depend on your time preference. If you are looking to choose in the short-run, then Model 1. If the long-run, then Model 2. 
+Looking at these two models, model one was the worst performing. Looking at Model two, the logarithmic relationship has positive bias ( which mean it over predicts), lower MAE, and lower MAPE. A MAPE less than 25%, which Model 2 has, means that a prediction has low, but acceptable accuracy. Model 2 also has a lower RMSE meaning that there were not large prediction errors. If you were to pick between one model or the other, it would depend on your time preference. If you are looking to choose in the short-run, then Model 2. If the long-run, we would still advise to use Model 2 because Model one has a very high MAPE. 
 
 
 ## Question 6
@@ -348,8 +341,13 @@ Provide interpretations of the coefficients, do the signs make sense? Perform ma
 
 ```{r Q6}
 
-summary(model_transformation1)
+summary(model_transformation2)
 ```
+
+Since Age, BMI, and Smoker all tested significant at 95% level, we will analyze those Coefficients.  
+If a person's Age increases by 1, their charges would increase by $0.02 give or take $0.01. 
+If a person's BMI increases by 1, their charges would increase by $0.04 give or take $0.03. 
+If a person is a Smoker, their charges would increase by $1.64 give or take $0.35. 
 
 ## Question 7
 
@@ -365,35 +363,37 @@ An eager insurance representative comes back with five potential clients. Using 
 
 
 ```{r Q7}
-####### need to decide whether the training model or the testing model is best. Then adjust the the formulas to reflect...I think ######
-model_1 <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = training_set)
+
+model_transformation2 <- lm(LnCharges ~., data = training_set[,c(10,2:6)])
+summary(model_transformation2)
 
 Customer1 <- data.frame(Age = 60,
 BMI = 22,
 Female = 1,
 Children = 0,
 Smoker = 0,
-City = insurance$Oviedo)
-predict(model_1, newdata = training_set,interval = "prediction")
-predict(model_1, newdata = training_set,interval = "confidence")
+City = 1)
+predict(model_transformation2, newdata = Customer1,interval = "prediction")
+predict(model_transformation2, newdata = Customer1,interval = "confidence")
+
 
 Customer2 <- data.frame(Age = 40,
 BMI = 30,
 Female = 0,
 Children = 1,
 Smoker = 0,
-City = dummy(default)
-predict(model_1, newdata = training_set,interval = "prediction")
-predict(model_1, newdata = training_set,interval = "confidence")
+City = 0)
+predict(model_transformation2, newdata = Customer2,interval = "prediction")
+predict(model_transformation2, newdata = Customer2,interval = "confidence")
 
 Customer3 <- data.frame(Age = 25,
 BMI = 25,
 Female = 0,
 Children = 0,
 Smoker = 1,
-City = insurance$WinterPark)
-
-predict(model_1, newdata = training_set, interval = "confidence", level = .95)
+City = 1)
+predict(model_transformation2, newdata = Customer3,interval = "prediction")
+predict(model_transformation2, newdata = Customer3,interval = "confidence")
 
 
 Customer4 <- data.frame(Age = 33,
@@ -401,30 +401,53 @@ BMI = 35,
 Female = 1,
 Children = 2,
 Smoker = 0,
-City = insurance$WinterSprings)
-predict(model_1, newdata = training_set,interval = "prediction")
-predict(model_1, newdata = training_set,interval = "confidence")
+City = 1)
+predict(model_transformation2, newdata = Customer4,interval = "prediction")
+predict(model_transformation2, newdata = Customer4,interval = "confidence")
 
 Customer5 <- data.frame(Age = 45,
 BMI = 27,
 Female = 1,
 Children = 3,
 Smoker = 0,
-City = insurance$Oviedo)
-predict(model_1, newdata = training_set,interval = "prediction")
-predict(model_1, newdata = training_set,interval = "confidence")
+City = 1)
+predict(model_transformation2, newdata = Customer5,interval = "prediction")
+predict(model_transformation2, newdata = Customer5,interval = "confidence")
 ```
+
+For Customer 1 we are 95% that they would be charged between $7.86 and $10.09
+For person with similar characteristics of Customer 1 we are 95% that they would be charged between $8.55 and $9.39
+
+For Customer 2 we are 95% that they would be charged between $7.65 and $9.77
+For person with similar characteristics of Customer 2 we are 95% that they would be charged between $8.48 and $8.94
+
+For Customer 3 we are 95% that they would be charged between $ 8.57 and$10.79
+For person with similar characteristics of Customer 3 we are 95% that they would be charged between $9.29 and $10.07
+
+For Customer 4 we are 95% that they would be charged between $8.01 and $10.21
+For person with similar characteristics of Customer 4 we are 95% that they would be charged between $8.73 and $9.48
+
+For Customer 5 we are 95% that they would be charged between $ 8.07 and $ 10.27
+For person with similar characteristics of Customer 5 we are 95% that they would be charged between $8.79 and $9.55
 
 ## Question 8
 
 The owner notices that some of the predictions are wider than others, explain why.
+
  
-"Because prediction intervals are concerned with the individual observations in a population as well as the parameter estimates, prediction intervals will necessarily be wider than a confidence interval calculated for the same data set. For the same reason, prediction intervals are also more susceptible to the assumption of normality than are confidence intervals."
+As stated by propharmagroup, "Because prediction intervals are concerned with the individual observations in a population as well as the parameter estimates, prediction intervals will necessarily be wider than a confidence interval calculated for the same data set."(propharmagroup.com)
+
+Basically, this means that parameter estimates are added concerning the use of prediction intervals.
 
 https://www.propharmagroup.com/blog/understanding-statistical-intervals-part-2-prediction-intervals/
+
 
 ## Question 9 
 
 Are there any prediction problems that occur with the five potential clients? If so, explain.
+```{r q9}
+ summary(training_set[,c(1:3,5)]) # only looking at the quantitative variables and the 47 observations.
+```
 
 
+All data from each customer is within range for each quantitative variable. We do not see any evidence of extrapolation or outliers.
